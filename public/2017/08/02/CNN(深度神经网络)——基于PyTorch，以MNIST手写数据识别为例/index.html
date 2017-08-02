@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="部分引自莫烦PyTorch教程 PyTorch 是 Torch 在 Python 上的衍生. 因为 Torch 是一个使用 Lua 语言的神经网络库, Torch 很好用, 但是 Lua 又不是特别流行, 所有开发团队将 Lua 的 Torch 移植到了更流行的语言 Python 上. 是的 PyTorch 一出生就引来了剧烈的反响. 为什么呢?很简单, 我们就看看有谁在用 PyTorch 吧.可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CNN(深度神经网络)——基于PyTorch，以MNIST手写数据识别为例">
+<meta property="og:url" content="http://shuimei.github.io/2017/08/02/CNN(深度神经网络)——基于PyTorch，以MNIST手写数据识别为例/index.html">
+<meta property="og:site_name" content="水妹">
+<meta property="og:description" content="部分引自莫烦PyTorch教程 PyTorch 是 Torch 在 Python 上的衍生. 因为 Torch 是一个使用 Lua 语言的神经网络库, Torch 很好用, 但是 Lua 又不是特别流行, 所有开发团队将 Lua 的 Torch 移植到了更流行的语言 Python 上. 是的 PyTorch 一出生就引来了剧烈的反响. 为什么呢?很简单, 我们就看看有谁在用 PyTorch 吧.可">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://morvanzhou.github.io/static/results/torch/1-1-1.png">
+<meta property="og:image" content="http://shuimei.github.io/home/betasy/Desktop/深度截图_选择区域_20170710161855.png">
+<meta property="og:image" content="http://shuimei.github.io/home/betasy/Documents/PyTorch-Tutorial/2-3-1.png">
+<meta property="og:image" content="http://shuimei.github.io/home/betasy/Documents/PyTorch-Tutorial/3-1-1.png">
+<meta property="og:image" content="http://shuimei.github.io/home/betasy/Documents/PyTorch-Tutorial/3-2-1.png">
+<meta property="og:image" content="https://kaggle2.blob.core.windows.net/competitions/kaggle/3004/logos/front_page.png">
+<meta property="og:image" content="http://b.hiphotos.baidu.com/baike/w%3D268%3Bg%3D0/sign=2d6e940a38292df597c3ab13840a3b5d/b999a9014c086e06a4156e6e00087bf40ad1cb52.jpg">
+<meta property="og:updated_time" content="2017-08-02T05:40:22.137Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CNN(深度神经网络)——基于PyTorch，以MNIST手写数据识别为例">
+<meta name="twitter:description" content="部分引自莫烦PyTorch教程 PyTorch 是 Torch 在 Python 上的衍生. 因为 Torch 是一个使用 Lua 语言的神经网络库, Torch 很好用, 但是 Lua 又不是特别流行, 所有开发团队将 Lua 的 Torch 移植到了更流行的语言 Python 上. 是的 PyTorch 一出生就引来了剧烈的反响. 为什么呢?很简单, 我们就看看有谁在用 PyTorch 吧.可">
+<meta name="twitter:image" content="https://morvanzhou.github.io/static/results/torch/1-1-1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://shuimei.github.io/2017/08/02/CNN(深度神经网络)——基于PyTorch，以MNIST手写数据识别为例/"/>
+
+
+
+
+
+  <title>CNN(深度神经网络)——基于PyTorch，以MNIST手写数据识别为例 | 水妹</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">水妹</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://shuimei.github.io/2017/08/02/CNN(深度神经网络)——基于PyTorch，以MNIST手写数据识别为例/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="水妹">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://avatars3.githubusercontent.com/u/16859022?v=4&s=460">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="水妹">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">CNN(深度神经网络)——基于PyTorch，以MNIST手写数据识别为例</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-02T13:40:22+08:00">
+                2017-08-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>部分引自<a href="https://morvanzhou.github.io/tutorials/machine-learning/torch/" target="_blank" rel="external">莫烦PyTorch教程</a></p>
+<p>PyTorch 是 Torch 在 Python 上的衍生. 因为 Torch 是一个使用 Lua 语言的神经网络库, Torch 很好用, 但是 Lua 又不是特别流行, 所有开发团队将 Lua 的 Torch 移植到了更流行的语言 Python 上. 是的 PyTorch 一出生就引来了剧烈的反响. 为什么呢?<br>很简单, 我们就看看有谁在用 PyTorch 吧.<br><img src="https://morvanzhou.github.io/static/results/torch/1-1-1.png" alt="此处输入图片的描述"><br>可见, 著名的 Facebook, twitter 等都在使用它, 这就说明 PyTorch 的确是好用的, 而且是值得推广.<br>而且如果你知道 Numpy, PyTorch 说他就是在神经网络领域可以用来替换 numpy 的模块.<br>据 PyTorch 自己介绍, 他们家的最大优点就是建立的神经网络是动态的, 对比静态的 Tensorflow, 他能更有效地处理一些问题, 比如说 RNN 变化时间长度的输出. 而我认为, 各家有各家的优势和劣势, 所以我们要以中立的态度. 两者都是大公司, Tensorflow 自己说自己在分布式训练上下了很大的功夫, 那我就默认 Tensorflow 在这一点上要超出 PyTorch, 但是 Tensorflow 的静态计算图使得他在 RNN 上有一点点被动 (虽然它用其他途径解决了), 不过用 PyTorch 的时候, 你会对这种动态的 RNN 有更好的理解.</p>
+<p>而且 Tensorflow 的高度工业化, 它的底层代码… 你是看不懂的. PyTorch 好那么一点点, 如果你深入 API, 你至少能比看 Tensorflow 多看懂一点点 PyTorch 的底层在干嘛.</p>
+<p>最后我的建议就是:</p>
+<p>如果你是学生, 随便选一个学, 或者稍稍偏向 PyTorch, 因为写代码的时候应该更好理解. 懂了一个模块, 转换 Tensorflow 或者其他的模块都好说.<br>如果是上班了, 跟着你公司来, 公司用什么, 你就用什么, 不要脱群.</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>目前PyTorch仅支持Linux和OSX平台，如果你想体验一下PyTorch，可以安装一个Ubuntu虚拟机。<br>安装PyTorch与安装其它Python模块非常相似。首先访问<a href="http://pytorch.org/" target="_blank" rel="external">Pytorch官网</a>，选择相应选项：<br><img src="/home/betasy/Desktop/深度截图_选择区域_20170710161855.png" alt=""></p>
+<p>得到如下的安装命令，使用pip安装。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">pip install http://download.pytorch.org/whl/cu75/torch-0.1.12.post2-cp27-none-linux_x86_64.whl </div><div class="line">pip install torchvision</div></pre></td></tr></table></figure></p>
+<p>安装结束后在命令行中运行<code>import torch;import torchvision</code>测试安装是否成功。<br>安装 PyTorch 会安装两个模块, 一个是 torch, 一个 torchvision, torch 是主模块, 用来搭建神经网络的, torchvision 是辅模块, 有数据库, 还有一些已经训练好的神经网络等着你直接用, 比如 (VGG, AlexNet, ResNet).</p>
+<h2 id="Tensor和Variable"><a href="#Tensor和Variable" class="headerlink" title="Tensor和Variable"></a>Tensor和Variable</h2><ul>
+<li><strong>Tensor</strong><br>Torch 自称为神经网络界的 Numpy, 因为他能将 torch 产生的 tensor 放在 GPU 中加速运算 (前提是你有合适的 GPU), 就像 Numpy 会把 array 放在 CPU 中加速运算. 所以神经网络的话, 当然是用 Torch 的 tensor 形式数据最好咯. 就像 Tensorflow 当中的 tensor 一样.<br>当然, 我们对 Numpy 还是爱不释手的, 因为我们太习惯 numpy 的形式了. 不过 torch 看出来我们的喜爱, 他把 torch 做的和 numpy 能很好的兼容. 比如这样就能自由地转换 numpy array 和 torch tensor 了:<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">import torch</div><div class="line">import numpy as np</div><div class="line"></div><div class="line">np_data = np.arange(6).reshape((2, 3))</div><div class="line">torch_data = torch.from_numpy(np_data)</div><div class="line">tensor2array = torch_data.numpy()</div><div class="line">print(</div><div class="line">    &apos;\nnumpy array:&apos;, np_data,          # [[0 1 2], [3 4 5]]</div><div class="line">    &apos;\ntorch tensor:&apos;, torch_data,      #  0  1  2 \n 3  4  5    [torch.LongTensor of size 2x3]</div><div class="line">    &apos;\ntensor to array:&apos;, tensor2array, # [[0 1 2], [3 4 5]]</div><div class="line">)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>其实 torch 中 tensor 的运算和 numpy array 的如出一辙, 我们就以对比的形式来看. 如果想了解 torch 中其它更多有用的运算符, <a href="http://pytorch.org/docs/torch.html#math-operations" target="_blank" rel="external">API就是你要去的地方</a> .<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"># abs 绝对值计算</div><div class="line">data = [-1, -2, 1, 2]</div><div class="line">tensor = torch.FloatTensor(data)  # 转换成32位浮点 tensor</div><div class="line">print(</div><div class="line">    &apos;\nabs&apos;,</div><div class="line">    &apos;\nnumpy: &apos;, np.abs(data),          # [1 2 1 2]</div><div class="line">    &apos;\ntorch: &apos;, torch.abs(tensor)      # [1 2 1 2]</div><div class="line">)</div><div class="line"></div><div class="line"># sin   三角函数 sin</div><div class="line">print(</div><div class="line">    &apos;\nsin&apos;,</div><div class="line">    &apos;\nnumpy: &apos;, np.sin(data),      # [-0.84147098 -0.90929743  0.84147098  0.90929743]</div><div class="line">    &apos;\ntorch: &apos;, torch.sin(tensor)  # [-0.8415 -0.9093  0.8415  0.9093]</div><div class="line">)</div><div class="line"></div><div class="line"># mean  均值</div><div class="line">print(</div><div class="line">    &apos;\nmean&apos;,</div><div class="line">    &apos;\nnumpy: &apos;, np.mean(data),         # 0.0</div><div class="line">    &apos;\ntorch: &apos;, torch.mean(tensor)     # 0.0</div><div class="line">)</div></pre></td></tr></table></figure></p>
+<p>除了简单的计算, 矩阵运算才是神经网络中最重要的部分. 所以我们展示下矩阵的乘法. 注意一下包含了一个 numpy 中可行, 但是 torch 中不可行的方式.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"># matrix multiplication 矩阵点乘</div><div class="line">data = [[1,2], [3,4]]</div><div class="line">tensor = torch.FloatTensor(data)  # 转换成32位浮点 tensor</div><div class="line"># correct method</div><div class="line">print(</div><div class="line">    &apos;\nmatrix multiplication (matmul)&apos;,</div><div class="line">    &apos;\nnumpy: &apos;, np.matmul(data, data),     # [[7, 10], [15, 22]]</div><div class="line">    &apos;\ntorch: &apos;, torch.mm(tensor, tensor)   # [[7, 10], [15, 22]]</div><div class="line">)</div><div class="line"></div><div class="line"># !!!!  下面是错误的方法 !!!!</div><div class="line">data = np.array(data)</div><div class="line">print(</div><div class="line">    &apos;\nmatrix multiplication (dot)&apos;,</div><div class="line">    &apos;\nnumpy: &apos;, data.dot(data),        # [[7, 10], [15, 22]] 在numpy 中可行</div><div class="line">    &apos;\ntorch: &apos;, tensor.dot(tensor)     # torch 会转换成 [1,2,3,4].dot([1,2,3,4) = 30.0</div><div class="line">)</div></pre></td></tr></table></figure></p>
+<ul>
+<li><strong>Variable</strong><br>在 Torch 中的 Variable 就是一个存放会变化的值的地理位置. 里面的值会不停的变化. 就像一个裝鸡蛋的篮子, 鸡蛋数会不停变动. 那谁是里面的鸡蛋呢, 自然就是 Torch 的 Tensor 咯. 如果用一个 Variable 进行计算, 那返回的也是一个同类型的 Variable.</li>
+</ul>
+<p>我们定义一个 Variable:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">import torch</div><div class="line">from torch.autograd import Variable # torch 中 Variable 模块</div><div class="line"></div><div class="line"># 先生鸡蛋</div><div class="line">tensor = torch.FloatTensor([[1,2],[3,4]])</div><div class="line"># 把鸡蛋放到篮子里, requires_grad是参不参与误差反向传播, 要不要计算梯度</div><div class="line">variable = Variable(tensor, requires_grad=True)</div><div class="line"></div><div class="line">print(tensor)</div><div class="line">&quot;&quot;&quot;</div><div class="line"> 1  2</div><div class="line"> 3  4</div><div class="line">[torch.FloatTensor of size 2x2]</div><div class="line">&quot;&quot;&quot;</div><div class="line"></div><div class="line">print(variable)</div><div class="line">&quot;&quot;&quot;</div><div class="line">Variable containing:</div><div class="line"> 1  2</div><div class="line"> 3  4</div><div class="line">[torch.FloatTensor of size 2x2]</div><div class="line">&quot;&quot;&quot;</div></pre></td></tr></table></figure></p>
+<p>我们再对比一下 tensor 的计算和 variable 的计算.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">t_out = torch.mean(tensor*tensor)       # x^2</div><div class="line">v_out = torch.mean(variable*variable)   # x^2</div><div class="line">print(t_out)</div><div class="line">print(v_out)    # 7.5</div><div class="line">到目前为止, 我们看不出什么不同, 但是时刻记住, Variable 计算时, 它在背景幕布后面一步步默默地搭建着一个庞大的系统, 叫做计算图, computational graph. 这个图是用来干嘛的? 原来是将所有的计算步骤 (节点) 都连接起来, 最后进行误差反向传递的时候, 一次性将所有 variable 里面的修改幅度 (梯度) 都计算出来, 而 tensor 就没有这个能力啦.</div><div class="line"></div><div class="line">v_out = torch.mean(variable*variable) 就是在计算图中添加的一个计算步骤, 计算误差反向传递的时候有他一份功劳, 我们就来举个例子:</div><div class="line"></div><div class="line">v_out.backward()    # 模拟 v_out 的误差反向传递</div></pre></td></tr></table></figure></p>
+<p>下面两步看不懂没关系, 只要知道 Variable 是计算图的一部分, 可以用来传递误差就好.<br> v_out = 1/4 <em> sum(variable</em>variable) 这是计算图中的 v_out 计算步骤<br> 针对于 v_out 的梯度就是, d(v_out)/d(variable) = 1/4<em>2</em>variable = variable/2<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">print(variable.grad)    # 初始 Variable 的梯度</div><div class="line">&apos;&apos;&apos;</div><div class="line"> 0.5000  1.0000</div><div class="line"> 1.5000  2.0000</div><div class="line">&apos;&apos;&apos;</div></pre></td></tr></table></figure></p>
+<p>直接print(variable)只会输出 Variable 形式的数据, 在很多时候是用不了的(比如想要用 plt 画图), 所以我们要转换一下, 将它变成 tensor 形式.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">print(variable)     #  Variable 形式</div><div class="line">&quot;&quot;&quot;</div><div class="line">Variable containing:</div><div class="line"> 1  2</div><div class="line"> 3  4</div><div class="line">[torch.FloatTensor of size 2x2]</div><div class="line">&quot;&quot;&quot;</div><div class="line"></div><div class="line">print(variable.data)    # tensor 形式</div><div class="line">&quot;&quot;&quot;</div><div class="line"> 1  2</div><div class="line"> 3  4</div><div class="line">[torch.FloatTensor of size 2x2]</div><div class="line">&quot;&quot;&quot;</div><div class="line"></div><div class="line">print(variable.data.numpy())    # numpy 形式</div><div class="line">&quot;&quot;&quot;</div><div class="line">[[ 1.  2.]</div><div class="line"> [ 3.  4.]]</div><div class="line">&quot;&quot;&quot;</div></pre></td></tr></table></figure></p>
+<h2 id="激励函数-Activation"><a href="#激励函数-Activation" class="headerlink" title="激励函数(Activation)"></a>激励函数(Activation)</h2><p>一句话概括 Activation: 就是让神经网络可以描述非线性问题的步骤, 是神经网络变得更强大.<br>Torch 中的激励函数有很多, 不过我们平时要用到的就这几个. relu, sigmoid, tanh, softplus. 那我们就看看他们各自长什么样啦.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">import torch</div><div class="line">import torch.nn.functional as F     # 激励函数都在这</div><div class="line">from torch.autograd import Variable</div><div class="line"></div><div class="line"># 做一些假数据来观看图像</div><div class="line">x = torch.linspace(-5, 5, 200)  # x data (tensor), shape=(100, 1)</div><div class="line">x = Variable(x)</div><div class="line">接着就是做生成不同的激励函数数据:</div><div class="line"></div><div class="line">x_np = x.data.numpy()   # 换成 numpy array, 出图时用</div><div class="line"></div><div class="line"># 几种常用的 激励函数</div><div class="line">y_relu = F.relu(x).data.numpy()</div><div class="line">y_sigmoid = F.sigmoid(x).data.numpy()</div><div class="line">y_tanh = F.tanh(x).data.numpy()</div><div class="line">y_softplus = F.softplus(x).data.numpy()</div><div class="line"># y_softmax = F.softmax(x)  softmax 比较特殊, 不能直接显示, 不过他是关于概率的, 用于分类</div></pre></td></tr></table></figure></p>
+<p><img src="/home/betasy/Documents/PyTorch-Tutorial/2-3-1.png" alt=""><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">import matplotlib.pyplot as plt  # python 的可视化模块, 我有教程 (https://morvanzhou.github.io/tutorials/data-manipulation/plt/)</div><div class="line"></div><div class="line">plt.figure(1, figsize=(8, 6))</div><div class="line">plt.subplot(221)</div><div class="line">plt.plot(x_np, y_relu, c=&apos;red&apos;, label=&apos;relu&apos;)</div><div class="line">plt.ylim((-1, 5))</div><div class="line">plt.legend(loc=&apos;best&apos;)</div><div class="line"></div><div class="line">plt.subplot(222)</div><div class="line">plt.plot(x_np, y_sigmoid, c=&apos;red&apos;, label=&apos;sigmoid&apos;)</div><div class="line">plt.ylim((-0.2, 1.2))</div><div class="line">plt.legend(loc=&apos;best&apos;)</div><div class="line"></div><div class="line">plt.subplot(223)</div><div class="line">plt.plot(x_np, y_tanh, c=&apos;red&apos;, label=&apos;tanh&apos;)</div><div class="line">plt.ylim((-1.2, 1.2))</div><div class="line">plt.legend(loc=&apos;best&apos;)</div><div class="line"></div><div class="line">plt.subplot(224)</div><div class="line">plt.plot(x_np, y_softplus, c=&apos;red&apos;, label=&apos;softplus&apos;)</div><div class="line">plt.ylim((-0.2, 6))</div><div class="line">plt.legend(loc=&apos;best&apos;)</div><div class="line"></div><div class="line">plt.show()</div></pre></td></tr></table></figure></p>
+<h2 id="关系拟合（回归）"><a href="#关系拟合（回归）" class="headerlink" title="关系拟合（回归）"></a>关系拟合（回归）</h2><p>我们创建一些假数据来模拟真实的情况. 比如一个一元二次函数: y = a * x^2 + b, 我们给 y 数据加上一点噪声来更加真实的展示它.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">import torch</div><div class="line">from torch.autograd import Variable</div><div class="line">import matplotlib.pyplot as plt</div><div class="line"></div><div class="line">x = torch.unsqueeze(torch.linspace(-1, 1, 100), dim=1)  # x data (tensor), shape=(100, 1)</div><div class="line">y = x.pow(2) + 0.2*torch.rand(x.size())                 # noisy y data (tensor), shape=(100, 1)</div><div class="line"></div><div class="line"># 用 Variable 来修饰这些数据 tensor</div><div class="line">x, y = torch.autograd.Variable(x), Variable(y)</div><div class="line"></div><div class="line"># 画图</div><div class="line">plt.scatter(x.data.numpy(), y.data.numpy())</div><div class="line">plt.show()</div></pre></td></tr></table></figure></p>
+<p>建立一个神经网络我们可以直接运用 torch 中的体系. 先定义所有的层属性(<strong>init</strong>()), 然后再一层层搭建(forward(x))层于层的关系链接. 建立关系的时候, 我们会用到激励函数, 如果还不清楚激励函数用途的同学, 这里有非常好的一篇动画教程.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">import torch</div><div class="line">import torch.nn.functional as F     # 激励函数都在这</div><div class="line"></div><div class="line">class Net(torch.nn.Module):  # 继承 torch 的 Module</div><div class="line">    def __init__(self, n_feature, n_hidden, n_output):</div><div class="line">        super(Net, self).__init__()     # 继承 __init__ 功能</div><div class="line">        # 定义每层用什么样的形式</div><div class="line">        self.hidden = torch.nn.Linear(n_feature, n_hidden)   # 隐藏层线性输出</div><div class="line">        self.predict = torch.nn.Linear(n_hidden, n_output)   # 输出层线性输出</div><div class="line"></div><div class="line">    def forward(self, x):   # 这同时也是 Module 中的 forward 功能</div><div class="line">        # 正向传播输入值, 神经网络分析出输出值</div><div class="line">        x = F.relu(self.hidden(x))      # 激励函数(隐藏层的线性值)</div><div class="line">        x = self.predict(x)             # 输出值</div><div class="line">        return x</div><div class="line"></div><div class="line">net = Net(n_feature=1, n_hidden=10, n_output=1)</div><div class="line"></div><div class="line">print(net)  # net 的结构</div><div class="line">&quot;&quot;&quot;</div><div class="line">Net (</div><div class="line">  (hidden): Linear (1 -&gt; 10)</div><div class="line">  (predict): Linear (10 -&gt; 1)</div><div class="line">)</div><div class="line">&quot;&quot;&quot;</div></pre></td></tr></table></figure></p>
+<p>训练的步骤很简单, 如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"># optimizer 是训练的工具</div><div class="line">optimizer = torch.optim.SGD(net.parameters(), lr=0.5)  # 传入 net 的所有参数, 学习率</div><div class="line">loss_func = torch.nn.MSELoss()      # 预测值和真实值的误差计算公式 (均方差)</div><div class="line">for t in range(100):</div><div class="line">    prediction = net(x)     # 喂给 net 训练数据 x, 输出预测值</div><div class="line"></div><div class="line">    loss = loss_func(prediction, y)     # 计算两者的误差</div><div class="line"></div><div class="line">    optimizer.zero_grad()   # 清空上一步的残余更新参数值</div><div class="line">    loss.backward()         # 误差反向传播, 计算参数更新值</div><div class="line">    optimizer.step()        # 将参数更新值施加到 net 的 parameters 上</div></pre></td></tr></table></figure>
+<p>为了可视化整个训练的过程, 更好的理解是如何训练, 我们如下操作:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">import matplotlib.pyplot as plt</div><div class="line"></div><div class="line">plt.ion()   # 画图</div><div class="line">plt.show()</div><div class="line"></div><div class="line">for t in range(100):</div><div class="line"></div><div class="line">    ...</div><div class="line">    loss.backward()</div><div class="line">    optimizer.step()</div><div class="line"></div><div class="line">    # 接着上面来</div><div class="line">    if t % 5 == 0:</div><div class="line">        # plot and show learning process</div><div class="line">        plt.cla()</div><div class="line">        plt.scatter(x.data.numpy(), y.data.numpy())</div><div class="line">        plt.plot(x.data.numpy(), prediction.data.numpy(), &apos;r-&apos;, lw=5)</div><div class="line">        plt.text(0.5, 0, &apos;Loss=%.4f&apos; % loss.data[0], fontdict=&#123;&apos;size&apos;: 20, &apos;color&apos;:  &apos;red&apos;&#125;)</div><div class="line">        plt.pause(0.1)</div></pre></td></tr></table></figure></p>
+<p><img src="/home/betasy/Documents/PyTorch-Tutorial/3-1-1.png" alt=""> </p>
+<h2 id="区分类型（分类）"><a href="#区分类型（分类）" class="headerlink" title="区分类型（分类）"></a>区分类型（分类）</h2><p>我们创建一些假数据来模拟真实的情况. 比如两个二次分布的数据, 不过他们的均值都不一样.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">import torch</div><div class="line">from torch.autograd import Variable</div><div class="line">import matplotlib.pyplot as plt</div><div class="line"></div><div class="line"># 假数据</div><div class="line">n_data = torch.ones(100, 2)         # 数据的基本形态</div><div class="line">x0 = torch.normal(2*n_data, 1)      # 类型0 x data (tensor), shape=(100, 2)</div><div class="line">y0 = torch.zeros(100)               # 类型0 y data (tensor), shape=(100, 1)</div><div class="line">x1 = torch.normal(-2*n_data, 1)     # 类型1 x data (tensor), shape=(100, 1)</div><div class="line">y1 = torch.ones(100)                # 类型1 y data (tensor), shape=(100, 1)</div><div class="line"></div><div class="line"># 注意 x, y 数据的数据形式是一定要像下面一样 (torch.cat 是在合并数据)</div><div class="line">x = torch.cat((x0, x1), 0).type(torch.FloatTensor)  # FloatTensor = 32-bit floating</div><div class="line">y = torch.cat((y0, y1), ).type(torch.LongTensor)    # LongTensor = 64-bit integer</div><div class="line"></div><div class="line"># torch 只能在 Variable 上训练, 所以把它们变成 Variable</div><div class="line">x, y = Variable(x), Variable(y)</div><div class="line"></div><div class="line"># plt.scatter(x.data.numpy()[:, 0], x.data.numpy()[:, 1], c=y.data.numpy(), s=100, lw=0, cmap=&apos;RdYlGn&apos;)</div><div class="line"># plt.show()</div><div class="line"></div><div class="line"># 画图</div><div class="line">plt.scatter(x.data.numpy(), y.data.numpy())</div><div class="line">plt.show()</div></pre></td></tr></table></figure></p>
+<p>建立一个神经网络我们可以直接运用 torch 中的体系. 先定义所有的层属性(<strong>init</strong>()), 然后再一层层搭建(forward(x))层于层的关系链接. 这个和我们在前面 regression 的时候的神经网络基本没差. 建立关系的时候, 我们会用到激励函数, 如果还不清楚激励函数用途的同学, 这里有非常好的一篇动画教程.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">import torch</div><div class="line">import torch.nn.functional as F     # 激励函数都在这</div><div class="line"></div><div class="line">class Net(torch.nn.Module):     # 继承 torch 的 Module</div><div class="line">    def __init__(self, n_feature, n_hidden, n_output):</div><div class="line">        super(Net, self).__init__()     # 继承 __init__ 功能</div><div class="line">        self.hidden = torch.nn.Linear(n_feature, n_hidden)   # 隐藏层线性输出</div><div class="line">        self.out = torch.nn.Linear(n_hidden, n_output)       # 输出层线性输出</div><div class="line"></div><div class="line">    def forward(self, x):</div><div class="line">        # 正向传播输入值, 神经网络分析出输出值</div><div class="line">        x = F.relu(self.hidden(x))      # 激励函数(隐藏层的线性值)</div><div class="line">        x = self.out(x)                 # 输出值, 但是这个不是预测值, 预测值还需要再另外计算</div><div class="line">        return x</div><div class="line"></div><div class="line">net = Net(n_feature=2, n_hidden=10, n_output=2) # 几个类别就几个 output</div><div class="line"></div><div class="line">print(net)  # net 的结构</div><div class="line">&quot;&quot;&quot;</div><div class="line">Net (</div><div class="line">  (hidden): Linear (2 -&gt; 10)</div><div class="line">  (out): Linear (10 -&gt; 2)</div><div class="line">)</div><div class="line">&quot;&quot;&quot;</div></pre></td></tr></table></figure></p>
+<p>训练的步骤很简单, 如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"># optimizer 是训练的工具</div><div class="line">optimizer = torch.optim.SGD(net.parameters(), lr=0.02)  # 传入 net 的所有参数, 学习率</div><div class="line"># 算误差的时候, 注意真实值!不是! one-hot 形式的, 而是1D Tensor, (batch,)</div><div class="line"># 但是预测值是2D tensor (batch, n_classes)</div><div class="line">loss_func = torch.nn.CrossEntropyLoss()</div><div class="line"></div><div class="line">for t in range(100):</div><div class="line">    out = net(x)     # 喂给 net 训练数据 x, 输出分析值</div><div class="line"></div><div class="line">    loss = loss_func(out, y)     # 计算两者的误差</div><div class="line"></div><div class="line">    optimizer.zero_grad()   # 清空上一步的残余更新参数值</div><div class="line">    loss.backward()         # 误差反向传播, 计算参数更新值</div><div class="line">    optimizer.step()        # 将参数更新值施加到 net 的 parameters 上</div></pre></td></tr></table></figure></p>
+<p>为了可视化整个训练的过程, 更好的理解是如何训练, 我们如下操作:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">import matplotlib.pyplot as plt</div><div class="line"></div><div class="line">plt.ion()   # 画图</div><div class="line">plt.show()</div><div class="line"></div><div class="line">for t in range(100):</div><div class="line"></div><div class="line">    ...</div><div class="line">    loss.backward()</div><div class="line">    optimizer.step()</div><div class="line"></div><div class="line">    # 接着上面来</div><div class="line">    if t % 2 == 0:</div><div class="line">        plt.cla()</div><div class="line">        # 过了一道 softmax 的激励函数后的最大概率才是预测值</div><div class="line">        prediction = torch.max(F.softmax(out), 1)[1]</div><div class="line">        pred_y = prediction.data.numpy().squeeze()</div><div class="line">        target_y = y.data.numpy()</div><div class="line">        plt.scatter(x.data.numpy()[:, 0], x.data.numpy()[:, 1], c=pred_y, s=100, lw=0, cmap=&apos;RdYlGn&apos;)</div><div class="line">        accuracy = sum(pred_y == target_y)/200  # 预测中有多少和真实值一样</div><div class="line">        plt.text(1.5, -4, &apos;Accuracy=%.2f&apos; % accuracy, fontdict=&#123;&apos;size&apos;: 20, &apos;color&apos;:  &apos;red&apos;&#125;)</div><div class="line">        plt.pause(0.1)</div><div class="line"></div><div class="line">plt.ioff()  # 停止画图</div><div class="line">plt.show()</div></pre></td></tr></table></figure></p>
+<p><img src="/home/betasy/Documents/PyTorch-Tutorial/3-2-1.png" alt=""> </p>
+<h2 id="手写数字识别（CNN卷积神经网络）"><a href="#手写数字识别（CNN卷积神经网络）" class="headerlink" title="手写数字识别（CNN卷积神经网络）"></a>手写数字识别（CNN卷积神经网络）</h2><p>我从kaggle竞赛官网上下载了MNIST手写数据集<br><a href="https://www.kaggle.com/c/digit-recognizer" target="_blank" rel="external">https://www.kaggle.com/c/digit-recognizer</a><br>这个竞赛的手写数据是以csv格式存储的，我首先将其转换成了图片。每个图片都是一张28*28的灰度图像，表示一个手写的数字。<br><img src="https://kaggle2.blob.core.windows.net/competitions/kaggle/3004/logos/front_page.png" alt=""> </p>
+<ol>
+<li><strong>创建数据集</strong></li>
+</ol>
+<p>手写数据集需要使用<code>torch.utils.data</code>模块包装为torch可处理的标准格式。通过继承该模块的Dataset类，并重写<code>__init__</code>和<code>__getitem__</code>方法，返回相应的训练数据和标签的迭代器。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">class MNISTDataset(Data.Dataset):</div><div class="line">    &quot;&quot;&quot;docstring for MyDataset&quot;&quot;&quot;</div><div class="line"></div><div class="line">    def __init__(self, images, labels):</div><div class="line">        super(MNISTDataset, self).__init__()</div><div class="line">        self.images = images</div><div class="line">        self.labels = labels</div><div class="line"></div><div class="line">    def __getitem__(self, index):</div><div class="line">        img, target = self.images[index], self.labels[index]</div><div class="line">        img_obj = Image.open(img)</div><div class="line">        arr = np.asarray(img_obj, dtype=&quot;float32&quot;)</div><div class="line">        arr = arr.reshape((1, arr.shape[0], arr.shape[1]))</div><div class="line">        img_tensor = torch.from_numpy(arr)</div><div class="line">        target_tensor = torch.LongTensor(np.array([int(target)]))</div><div class="line">        return img_tensor, target_tensor</div><div class="line"></div><div class="line">    def __len__(self):</div><div class="line">        return len(self.images)</div></pre></td></tr></table></figure></p>
+<ol>
+<li><strong>构建神经网络</strong><br>PyTorch构建神经网络非常简单，这里只需要继承<code>torch.nn</code>中的<code>Module</code>就可以使用一系列的基础设施建设我们的神经网络了。这里实现了一个简单的卷积神经网络，它包括<code>conv1</code>,<code>conv2</code>和<code>out</code>层，其中<code>conv1</code>,<code>conv2</code>是两个卷积层，<code>out</code>是一个类似全连接层的结构。<br>除了设计网路结构，还要定义层与层之间的前向传播规则。定义<code>forward</code>方法可以实现前向传播的规则。<br><img src="http://b.hiphotos.baidu.com/baike/w%3D268%3Bg%3D0/sign=2d6e940a38292df597c3ab13840a3b5d/b999a9014c086e06a4156e6e00087bf40ad1cb52.jpg" alt=""><br>我们可以把<code>__init__</code>方法看做是上图中的神经元，而<code>forward</code>方法就是神经元之间的连线<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">class CNN(nn.Module):</div><div class="line">    def __init__(self):</div><div class="line">        super(CNN, self).__init__()</div><div class="line">        self.conv1 = nn.Sequential(</div><div class="line">            nn.Conv2d(</div><div class="line">                in_channels=1,</div><div class="line">                out_channels=16,</div><div class="line">                kernel_size=5,</div><div class="line">                stride=1,</div><div class="line">                padding=2,</div><div class="line">            ),</div><div class="line">            nn.ReLU(),</div><div class="line">            nn.MaxPool2d(kernel_size=2),</div><div class="line">        )</div><div class="line">        self.conv2 = nn.Sequential(</div><div class="line">            nn.Conv2d(16, 32, 5, 1, 2),</div><div class="line">            nn.ReLU(),</div><div class="line">            nn.MaxPool2d(2),</div><div class="line">        )</div><div class="line">        self.out = nn.Linear(32 * 7 * 7, 10)</div><div class="line"></div><div class="line">    def forward(self, x):</div><div class="line">        x = self.conv1(x)</div><div class="line">        x = self.conv2(x)</div><div class="line">        x = x.view(x.size(0), -1)</div><div class="line">        output = self.out(x)</div><div class="line">        return output</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="优化网络"><a href="#优化网络" class="headerlink" title="优化网络"></a>优化网络</h2><p>创建好网络结构之后，我们可以预见网络中会有许多参数（weights, bias）需要求解。卷积神经网络运行的过程，就是优化器按照一定的规则对网络中的参数进行调整的过程。PyTorch提供几种常用的优化器。只需要按照需求实例化优化器就好了。<br><code>optimizer = torch.optim.Adam(cnn.parameters(), lr=LR)</code></p>
+<h2 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h2><p>损失函数是优化器依赖的条件，同样的Pytorch中提供多种损失函数应对不同的计算任务。<br><code>loss_func = nn.CrossEntropyLoss()</code></p>
+<h2 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">plt.ion()</div><div class="line">    for epoch in range(EPOCH):</div><div class="line">        for step, (x, y) in enumerate(train_loader):</div><div class="line">            b_x = Variable(x)</div><div class="line">            b_y = Variable(y)</div><div class="line">            b_y = b_y.view(-1)</div><div class="line">            output = cnn(b_x)</div><div class="line">            loss = loss_func(output, b_y)</div><div class="line">            optimizer.zero_grad()</div><div class="line">            loss.backward()</div><div class="line">            optimizer.step()</div><div class="line">            if step % 50 ==0:</div><div class="line">            	print(&apos;Epoch: &apos;, epoch, &quot;| train loss: %.4f&quot; % loss.data[0])</div><div class="line">            	plt.plot(step, loss.data[0],marker=&quot;o&quot;,markeredgecolor=&apos;red&apos;, markersize=8)</div><div class="line">            	plt.show(); plt.pause(0.01)</div><div class="line">    plt.ioff()</div></pre></td></tr></table></figure>
+<pre><code>## 保存模型
+`torch.save(cnn.state_dict(), &quot;mnist_cnn_params_epoch2.pkl&quot;)`
+## 测试
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">    cnn2= CNN()</div><div class="line">cnn2.load_state_dict(torch.load(&quot;mnist_cnn_params_epoch2.pkl&quot;))</div><div class="line">f = open(&quot;submission2.csv&quot;,&quot;a+&quot;)</div><div class="line">f.write(&quot;ImageId,Label\n&quot;)</div><div class="line">for i in range(1,28001):</div><div class="line">    img_path = &quot;/home/betasy/Documents/kaggle/digits recognizer/mnist/test/%d.jpg&quot;%i</div><div class="line">    img_obj = Image.open(img_path)</div><div class="line">    arr = np.asarray(img_obj, dtype=&quot;float32&quot;)</div><div class="line"></div><div class="line">    arr = arr.reshape((1, 1, arr.shape[0], arr.shape[1]))</div><div class="line">    </div><div class="line">    img_tensor = torch.from_numpy(arr)</div><div class="line">    x = Variable(img_tensor)</div><div class="line">    output = cnn2(x)</div><div class="line">    pred_y = torch.max(output, 1)[1].data.squeeze()</div><div class="line">    prediction = pred_y.numpy()</div><div class="line">    f.write(&quot;%d,%d\n&quot;%(i, int(prediction)))</div><div class="line">f.close()</div><div class="line">print(&quot;prediction over.&quot;)</div></pre></td></tr></table></figure>
+</code></pre>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/02/使用Python爬取豆瓣电影信息/" rel="next" title="使用Python爬取豆瓣电影信息">
+                <i class="fa fa-chevron-left"></i> 使用Python爬取豆瓣电影信息
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/02/invasive species worknotes/" rel="prev" title="用PyTorch做深度学习之fine-tuning">
+                用PyTorch做深度学习之fine-tuning <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars3.githubusercontent.com/u/16859022?v=4&s=460"
+               alt="水妹" />
+          <p class="site-author-name" itemprop="name">水妹</p>
+           
+              <p class="site-description motion-element" itemprop="description">应无所住而生其心</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number">1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tensor和Variable"><span class="nav-number">2.</span> <span class="nav-text">Tensor和Variable</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#激励函数-Activation"><span class="nav-number">3.</span> <span class="nav-text">激励函数(Activation)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关系拟合（回归）"><span class="nav-number">4.</span> <span class="nav-text">关系拟合（回归）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#区分类型（分类）"><span class="nav-number">5.</span> <span class="nav-text">区分类型（分类）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#手写数字识别（CNN卷积神经网络）"><span class="nav-number">6.</span> <span class="nav-text">手写数字识别（CNN卷积神经网络）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化网络"><span class="nav-number">7.</span> <span class="nav-text">优化网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#损失函数"><span class="nav-number">8.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#训练"><span class="nav-number">9.</span> <span class="nav-text">训练</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">水妹</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Gemini
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
